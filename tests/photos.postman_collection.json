@@ -386,14 +386,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/media/photos/{{createdPhotoId}}.png",
+					"raw": "{{baseUrl}}/photos/{{createdPhotoId}}",
 					"host": [
 						"{{baseUrl}}"
 					],
 					"path": [
-						"media",
 						"photos",
-						"{{createdPhotoId}}.png"
+						"{{createdPhotoId}}"
 					]
 				}
 			},
