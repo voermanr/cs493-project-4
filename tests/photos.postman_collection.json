@@ -203,6 +203,16 @@
 									"key": "image",
 									"type": "file",
 									"src": "./test_image.png"
+								},
+								{
+									"key": "userid",
+									"value": "{{createdUserId}}",
+									"type": "text"
+								},
+								{
+									"key": "businessid",
+									"value": "{{createdBusinessId}}",
+									"type": "text"
 								}
 							]
 						},
@@ -331,14 +341,17 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"const response = pm.response.json;",
+							"const response = pm.response.json();",
 							"",
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
 							"});",
 							"",
 							"pm.collectionVariables.unset('businessPreState');",
-							"pm.collectionVariables.set('businessPreState', response.state)"
+							"pm.collectionVariables.set('businessPreState', response.state)",
+							"",
+							"pm.collectionVariables.unset('createdThumbnailId');",
+							"pm.collectionVariables.set('createdThumbnailId', response.metadata.thumbnailId);"
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -394,6 +407,44 @@
 						"media",
 						"photos",
 						"{{createdPhotoId}}.png"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get a created photo's thumbnail",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json;",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.collectionVariables.unset('businessPreState');",
+							"pm.collectionVariables.set('businessPreState', response.state)"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/media/thumbnails/{{createdThumbnailId}}.jpg",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"media",
+						"thumbnails",
+						"{{createdThumbnailId}}.jpg"
 					]
 				}
 			},
@@ -479,6 +530,10 @@
 		},
 		{
 			"key": "createdPhotoId",
+			"value": ""
+		},
+		{
+			"key": "createdThumbnailId",
 			"value": ""
 		}
 	]

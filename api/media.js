@@ -11,13 +11,14 @@ async function sendImageFromBucket(imageId, bucketName, req, res, next) {
         });
 
         const files = await gridFSBucket.find({
-            _id: imageId
+            _id: new ObjectId(imageId)
         }).toArray();
 
         const file = files[0];
 
-        if (file && file.length > 0 && file.metadata.contentType.split('/')[1] === req.params.ext) {
+        if (file && file.length > 0) {
             res.type(file.metadata.contentType)
+            console.log('\t> res.type: ', res.type)
             const gridFSBucketReadStream = gridFSBucket.openDownloadStreamByName(file.filename);
             gridFSBucketReadStream.pipe(res)
         } else {
@@ -28,14 +29,6 @@ async function sendImageFromBucket(imageId, bucketName, req, res, next) {
     }
 }
 
-router.get('/photos/:photoid.:ext', async (req, res, next) => {
-    if (req.params.ext === 'png' || req.params.ext === 'jpg') {
-        const photoid = await new ObjectId(req.params.photoid)
-        await sendImageFromBucket(photoid, 'images', req, res, next);
-    }
-})
-
-router.get('/media/thumbnails/:thumbid.jpg', async (req, res, next) => {
-    const thumbId = new ObjectId(req.params.thumbid);
-    await sendImageFromBucket(thumbId, 'thumbnails', req, res, next)
+router.get('/:bucketname/:thumbid.:ext', async (req, res, next) => {
+    await sendImageFromBucket(req.params.thumbid, req.params.bucketname, req, res, next);
 });

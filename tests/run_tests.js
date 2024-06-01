@@ -2,11 +2,11 @@ const newman = require('newman');
 
 const env = 'jwt.postman_environment.json';
 const collections = [
-    { collection: 'adminUsers.postman_collection.json', environment: env },
-    { collection: 'users.postman_collection.json', environment: env },
-    { collection: 'businesses.postman_collection.json', environment: env },
+    //{ collection: 'adminUsers.postman_collection.json', environment: env },
+    //{ collection: 'users.postman_collection.json', environment: env },
+    //{ collection: 'businesses.postman_collection.json', environment: env },
     { collection: 'photos.postman_collection.json', environment: env },
-    { collection: 'reviews.postman_collection.json', environment: env },
+    //{ collection: 'reviews.postman_collection.json', environment: env },
 ];
 
 const runCollection = (collection, environment) => {

@@ -16,6 +16,7 @@ const getChannel = require("../lib/rabbiter");
 exports.router = router;
 
 const queueName = 'images'
+const bucketName = 'photos'
 
 /* Schema describing required/optional fields of a photo object. */
 const photoSchema = {
@@ -37,7 +38,7 @@ function saveImage(image, metadata) {
 
   return new Promise((resolve, reject) => {
     const bucket = new GridFSBucket(mongoConnection.getDB(), {
-      bucketName: 'images',
+      bucketName: bucketName,
     });
 
     const uploadStream = bucket.openUploadStream(image.filename, {metadata: metadata});
@@ -46,7 +47,7 @@ function saveImage(image, metadata) {
         .on('finish', async () => {
           const channel = await getChannel(queueName);
           channel.sendToQueue('images', Buffer.from(uploadStream.id.toString()));
-          console.log(`\t > sent message to ${channel}.`);
+          //console.log(`\t > sent message to ${channel}.`);
           resolve(uploadStream.id)
         });
   })
@@ -66,11 +67,11 @@ router.get('/:photoid', async (req, res, next) => {
   let photo;
 
   try {
-    const bucket = new GridFSBucket(getDB(), { bucketName: 'images' })
+    const bucket = new GridFSBucket(getDB(), { bucketName: bucketName })
     photo = await bucket.find({
       _id: new ObjectId(req.params.photoid)
     }).toArray()
-    console.log('photo:', photo)
+    //console.log('photo:', photo)
   }
   catch (e) {
     next(e)
@@ -78,7 +79,7 @@ router.get('/:photoid', async (req, res, next) => {
 
   if (photo) {
     // DONE: ROUTE COVERED
-    res.status(200).json(photo);
+    res.status(200).json(photo[0]);
   }
   else {
     // TODO: cover route
@@ -98,6 +99,7 @@ router.post('/', upload.single('image'), async (req, res, next) => {
   if (req.file && req.body) {
     const metadata = extractValidFields(req.body, photoSchema);
     metadata.contentType = req.file.mimetype;
+    //console.log('\t> mimetype: ', req.file.mimetype);
     req.file.filename = `${crypto.randomBytes(16).toString('hex')}.${imageTypes[req.file.mimetype]}`;
 
     try {
