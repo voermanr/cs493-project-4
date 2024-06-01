@@ -5,11 +5,9 @@ const {isAuthenticated} = require("../lib/authenicator");
 const {isOwner} = require("../lib/authorizer");
 const {ObjectId, GridFSBucket} = require("mongodb");
 const multer = require('multer');
-const res = require("express/lib/response");
 const crypto = require("crypto");
 const streamifier = require('streamifier');
 
-const { Readable } = require('stream')
 const {getDB} = require("../lib/mongoConnection");
 const getChannel = require("../lib/rabbiter");
 
