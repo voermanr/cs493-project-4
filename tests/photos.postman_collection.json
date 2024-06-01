@@ -1,0 +1,446 @@
+{
+	"info": {
+		"_postman_id": "9889fe47-c878-44cc-80f5-bb033f8f2b2b",
+		"name": "photos",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34993799"
+	},
+	"item": [
+		{
+			"name": "post a new photo",
+			"item": [
+				{
+					"name": "create a new user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"pm.collectionVariables.unset('createdUserId');",
+									"pm.collectionVariables.set('createdUserId', response.username)",
+									"",
+									"pm.collectionVariables.unset('createdUserPassword');",
+									"pm.collectionVariables.set('createdUserPassword', JSON.parse(pm.request.body.raw).password)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"{{$randomUserName}}\",\n    \"password\": \"{{$randomPassword}}\",\n    \"email\": \"{{$randomEmail}}\"\n}"
+						},
+						"url": {
+							"raw": "localhost:6969/users",
+							"host": [
+								"localhost"
+							],
+							"port": "6969",
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login as created user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"pm.collectionVariables.unset('userAuthToken');",
+									"pm.collectionVariables.set('userAuthToken', response.token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"{{createdUserId}}\",\n    \"password\": \"{{createdUserPassword}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/users/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "make a new business",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"pm.collectionVariables.unset('createdBusinessId');",
+									"pm.collectionVariables.set('createdBusinessId', response._id)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{userAuthToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"name\": \"{{$randomCompanyName}}\",\n        \"address\": \"{{$randomStreetAddress}}\",\n        \"city\": \"{{$randomCity}}\",\n        \"state\": \"TS\",\n        \"zip\": \"69420\",\n        \"phone\": \"{{$randomPhoneNumber}}\",\n        \"category\": \"{{$randomDepartment}}\",\n        \"subcategory\": \"{{$randomDepartment}}\",\n        \"website\": \"http://testbusiness.com\",\n        \"email\": \"test@testbusiness.com\"\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/businesses",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"businesses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "make a new photo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();",
+									"",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Response has all required properties\", function () {",
+									"    pm.response.to.have.jsonBody(\"_id\");",
+									"    pm.response.to.have.jsonBody(\"links\");",
+									"});",
+									"",
+									"pm.collectionVariables.unset('createdPhotoId');",
+									"pm.collectionVariables.set('createdPhotoId', response._id)"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{userAuthToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"userid\": \"{{createdUserId}}\",\n        \"businessid\": \"{{createdBusinessId}}\",\n        \"caption\": \"{{$randomCity}}\"\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/photos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"photos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update a photo",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json;",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has all required properties\", function () {",
+									"    pm.response.to.have.jsonBody(\"_id\");",
+									"    pm.response.to.have.jsonBody(\"links\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{userAuthToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"userid\": \"{{createdUserId}}\",\n        \"businessid\": \"{{createdBusinessId}}\",\n        \"caption\": \"butts\"\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/photos/{{createdPhotoId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"photos",
+								"{{createdPhotoId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "get a user's photos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json;",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{userAuthToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/users/{{createdUserId}}/photos/",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"users",
+						"{{createdUserId}}",
+						"photos",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get info about a created photo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json;",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.collectionVariables.unset('businessPreState');",
+							"pm.collectionVariables.set('businessPreState', response.state)"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/photos/{{createdPhotoId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"photos",
+						"{{createdPhotoId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete a photo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json;",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{userAuthToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/photos/{{createdPhotoId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"photos",
+						"{{createdPhotoId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "firstCreatedUserId",
+			"value": ""
+		},
+		{
+			"key": "createdUserId",
+			"value": ""
+		},
+		{
+			"key": "firstCreatedUserPassword",
+			"value": ""
+		},
+		{
+			"key": "createdUserPassword",
+			"value": ""
+		},
+		{
+			"key": "userAuthToken",
+			"value": ""
+		},
+		{
+			"key": "firstUserAuthToken",
+			"value": ""
+		},
+		{
+			"key": "createdBusinessId",
+			"value": ""
+		},
+		{
+			"key": "businessPreState",
+			"value": ""
+		},
+		{
+			"key": "createdPhotoId",
+			"value": ""
+		}
+	]
+}
