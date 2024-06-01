@@ -386,7 +386,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{baseUrl}}/photos/{{createdPhotoId}}",
+					"raw": "{{baseUrl}}/media/photos/{{createdPhotoId}}.png",
 					"host": [
 						"{{baseUrl}}"
 					],
