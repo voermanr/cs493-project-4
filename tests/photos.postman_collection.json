@@ -202,7 +202,7 @@
 								{
 									"key": "image",
 									"type": "file",
-									"src": "/Users/rossvoerman/Downloads/EdErbb8XkAA8LGw.jpeg"
+									"src": "./test_image.png"
 								}
 							]
 						},
@@ -391,8 +391,9 @@
 						"{{baseUrl}}"
 					],
 					"path": [
+						"media",
 						"photos",
-						"{{createdPhotoId}}"
+						"{{createdPhotoId}}.png"
 					]
 				}
 			},
