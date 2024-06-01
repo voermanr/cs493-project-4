@@ -102,7 +102,7 @@ router.post('/', upload.single('image'), async (req, res, next) => {
 
     try {
       const id = await saveImage(req.file, metadata);
-      console.log("id:", id);
+      //console.log("id:", id);
       res.status(201).json({
         _id: id,
         links: {

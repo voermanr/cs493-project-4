@@ -18,7 +18,7 @@ async function sendImageFromBucket(imageId, bucketName, req, res, next) {
 
         if (file && file.length > 0) {
             res.type(file.metadata.contentType)
-            console.log('\t> res.type: ', res.type)
+            //console.log('\t> res.type: ', res.type)
             const gridFSBucketReadStream = gridFSBucket.openDownloadStreamByName(file.filename);
             gridFSBucketReadStream.pipe(res)
         } else {
