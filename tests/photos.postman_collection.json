@@ -197,13 +197,14 @@
 						"method": "POST",
 						"header": [],
 						"body": {
-							"mode": "raw",
-							"raw": "{\n        \"userid\": \"{{createdUserId}}\",\n        \"businessid\": \"{{createdBusinessId}}\",\n        \"caption\": \"{{$randomCity}}\"\n    }",
-							"options": {
-								"raw": {
-									"language": "json"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/Users/rossvoerman/Downloads/EdErbb8XkAA8LGw.jpeg"
 								}
-							}
+							]
 						},
 						"url": {
 							"raw": "{{baseUrl}}/photos",
@@ -216,66 +217,66 @@
 						}
 					},
 					"response": []
-				},
-				{
-					"name": "update a photo",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"const response = pm.response.json;",
-									"",
-									"pm.test(\"Status code is 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"",
-									"pm.test(\"Response has all required properties\", function () {",
-									"    pm.response.to.have.jsonBody(\"_id\");",
-									"    pm.response.to.have.jsonBody(\"links\");",
-									"});"
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "{{userAuthToken}}",
-									"type": "string"
-								}
-							]
-						},
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n        \"userid\": \"{{createdUserId}}\",\n        \"businessid\": \"{{createdBusinessId}}\",\n        \"caption\": \"butts\"\n    }",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/photos/{{createdPhotoId}}",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"photos",
-								"{{createdPhotoId}}"
-							]
-						}
-					},
-					"response": []
 				}
 			]
+		},
+		{
+			"name": "update a photo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json;",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response has all required properties\", function () {",
+							"    pm.response.to.have.jsonBody(\"_id\");",
+							"    pm.response.to.have.jsonBody(\"links\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{userAuthToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n        \"userid\": \"{{createdUserId}}\",\n        \"businessid\": \"{{createdBusinessId}}\",\n        \"caption\": \"butts\"\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/photos/{{createdPhotoId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"photos",
+						"{{createdPhotoId}}"
+					]
+				}
+			},
+			"response": []
 		},
 		{
 			"name": "get a user's photos",
@@ -355,6 +356,44 @@
 					"path": [
 						"photos",
 						"{{createdPhotoId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get a created photo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const response = pm.response.json;",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.collectionVariables.unset('businessPreState');",
+							"pm.collectionVariables.set('businessPreState', response.state)"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/media/photos/{{createdPhotoId}}.png",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"media",
+						"photos",
+						"{{createdPhotoId}}.png"
 					]
 				}
 			},
